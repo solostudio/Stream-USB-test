@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
@@ -15,16 +16,18 @@
     <EditText
         android:layout_centerHorizontal="true"
         android:id="@+id/et_url"
-        android:hint="endpoint"
-        android:textColor="#f00"
-        android:textColorHint="#f00"
+        android:hint="地址(RTMP)"
+        android:textColor="#EE7700"
+        android:textColorHint="#C0C0C0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/start_stop"
-        android:text="Start Stream"
+        android:text="启动推流"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
 </RelativeLayout>
