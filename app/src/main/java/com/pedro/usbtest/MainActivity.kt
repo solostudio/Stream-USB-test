@@ -1,6 +1,7 @@
 package com.pedro.usbtest
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.hardware.usb.UsbDevice
@@ -18,48 +19,7 @@ import net.ossrs.rtmp.ConnectCheckerRtmp
 
 class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
 
-    override fun onAuthSuccessRtmp() {
-        Log.e("BYYD", "onAuthSuccessRtmp ")
-    }
-
-    override fun onNewBitrateRtmp(bitrate: Long) {
-
-    }
-
-    override fun onConnectionSuccessRtmp() {
-        runOnUiThread {
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun onConnectionFailedRtmp(reason: String) {
-        runOnUiThread {
-            Toast.makeText(this, "Failed $reason", Toast.LENGTH_SHORT).show()
-            rtmpUSB.stopStream(uvcCamera)
-        }
-    }
-
-    override fun onAuthErrorRtmp() {
-        Log.e("BYYD", "onAuthErrorRtmp")
-    }
-
-    override fun onDisconnectRtmp() {
-        runOnUiThread {
-            Toast.makeText(this, "Disconnect", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) {
-    }
-
-    override fun surfaceDestroyed(p0: SurfaceHolder?) {
-
-    }
-
-    override fun surfaceCreated(p0: SurfaceHolder?) {
-
-    }
-
+    // **********************************************************
     private lateinit var usbMonitor: USBMonitor
     private var uvcCamera: UVCCamera? = null
     private var isUsbOpen = true
@@ -68,6 +28,8 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
     private var defished = false
     private lateinit var rtmpUSB: RtmpUSB
 
+    // **********************************************************
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -86,18 +48,22 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
         start_stop.setOnClickListener {
             if (uvcCamera != null) {
                 if (!rtmpUSB.isStreaming) {
-
                     startStream(et_url.text.toString())
                     start_stop.text = "停止推流"
                 } else {
                     rtmpUSB.stopStream(uvcCamera)
-                    start_stop.text = "启动推流"
+                    resetUI()
                 }
             }
         }
 
         // 地址
-        et_url.setText("rtmp://192.168.0.104:1935/live/demo")
+        et_url.setText("rtmp://47.100.8.76:1935/live/demo")
+        Toast.makeText(this, "等待摄像头检测并预览，再启动推流。", Toast.LENGTH_LONG).show()
+    }
+
+    private fun resetUI() {
+        start_stop.text = "启动推流"
     }
 
     private fun startStream(url: String) {
@@ -111,6 +77,7 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
         }
     }
 
+    // **********************************************************
     private val onDeviceConnectListener = object : USBMonitor.OnDeviceConnectListener {
         override fun onAttach(device: UsbDevice?) {
             Log.e("BYYD", "发现设备")
@@ -135,6 +102,7 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
                 }
             }
 
+            // 启动推流
             uvcCamera = camera
             rtmpUSB.startPreview(uvcCamera, width, height)
         }
@@ -162,6 +130,7 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
         }
     }
 
+    // **********************************************************
     override fun onDestroy() {
         super.onDestroy()
 
@@ -174,4 +143,55 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
             usbMonitor.unregister()
         }
     }
+
+
+    // **********************************************************
+    override fun onAuthSuccessRtmp() {
+        Log.e("BYYD", "onAuthSuccessRtmp ")
+    }
+
+    override fun onNewBitrateRtmp(bitrate: Long) {
+
+    }
+
+    override fun onConnectionSuccessRtmp() {
+        runOnUiThread {
+            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onConnectionFailedRtmp(reason: String) {
+        runOnUiThread {
+            Toast.makeText(this, "Failed $reason", Toast.LENGTH_LONG).show()
+            rtmpUSB.stopStream(uvcCamera)
+            resetUI()
+        }
+    }
+
+    override fun onAuthErrorRtmp() {
+        runOnUiThread {
+            Log.e("BYYD", "onAuthErrorRtmp")
+            resetUI()
+        }
+    }
+
+    override fun onDisconnectRtmp() {
+        runOnUiThread {
+            Toast.makeText(this, "Disconnected", Toast.LENGTH_SHORT).show()
+            resetUI()
+        }
+    }
+
+    // **********************************************************
+    override fun surfaceChanged(p0: SurfaceHolder?, p1: Int, p2: Int, p3: Int) {
+    }
+
+    override fun surfaceDestroyed(p0: SurfaceHolder?) {
+
+    }
+
+    override fun surfaceCreated(p0: SurfaceHolder?) {
+
+    }
+    // **********************************************************
 }

@@ -16,7 +16,7 @@
     <EditText
         android:layout_centerHorizontal="true"
         android:id="@+id/et_url"
-        android:hint="地址(RTMP)"
+        android:hint="RTMP推流地址"
         android:textColor="#EE7700"
         android:textColorHint="#C0C0C0"
         android:layout_width="match_parent"

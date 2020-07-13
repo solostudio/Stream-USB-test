@@ -8,8 +8,8 @@ android {
         applicationId "com.pedro.minidunkam"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.versionTarget
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,6 +36,7 @@ dependencies {
 
     implementation 'com.android.support:support-v4:28.0.0'
 
+    // rtmp-rtsp-stream-client-java、libuvccamera
     implementation 'com.github.pedroSG94.rtmp-rtsp-stream-client-java:rtplibrary:1.8.4'
     implementation group: 'com.serenegiant.uvccamera', name: 'libuvccamera', version: '1.2.0'
 }
