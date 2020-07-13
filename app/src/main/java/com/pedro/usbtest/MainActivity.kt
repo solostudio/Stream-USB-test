@@ -77,6 +77,7 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
             ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.RECORD_AUDIO), 1);
         }
+        Log.e("BYYD", "录音权限检查")
 
         rtmpUSB = RtmpUSB(openglview, this)
         usbMonitor = USBMonitor(this, onDeviceConnectListener)
