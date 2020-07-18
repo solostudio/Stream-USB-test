@@ -58,7 +58,7 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
         }
 
         // 地址
-        et_url.setText("rtmp://47.100.8.76:1935/live/demo")
+        et_url.setText("rtmp://daohuibo.com:5656/live/demo")
         Toast.makeText(this, "等待摄像头检测并预览，再启动推流。", Toast.LENGTH_LONG).show()
     }
 
@@ -80,7 +80,10 @@ class MainActivity : Activity(), SurfaceHolder.Callback, ConnectCheckerRtmp {
     // **********************************************************
     private val onDeviceConnectListener = object : USBMonitor.OnDeviceConnectListener {
         override fun onAttach(device: UsbDevice?) {
-            Log.e("BYYD", "发现设备")
+            Log.e("BYYD", "发现设备: " + device?.deviceName)
+            if(device?.productName?.contains("rgb_usb", ignoreCase = true) != false){
+                Log.e("BYYD", "rgb_usb设备: " + device?.deviceName)
+            }
             usbMonitor.requestPermission(device)
         }
 
